@@ -2,7 +2,7 @@
   "name": "movies-app-api-rest-consupmtion",
   "version": "1.0.0",
   "description": "Movies app employing The Movies DB API",
-  "main": "./src/index.html",
+  "main": "./src/logic.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
