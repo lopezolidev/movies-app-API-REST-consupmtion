@@ -1,1 +1,1 @@
-console.log('Hello world')
+console.log(API_KEY)
