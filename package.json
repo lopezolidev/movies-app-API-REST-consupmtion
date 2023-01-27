@@ -1,0 +1,20 @@
+{
+  "name": "movies-app-api-rest-consupmtion",
+  "version": "1.0.0",
+  "description": "Movies app employing The Movies DB API",
+  "main": "./src/index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lopezolidev/movies-app-API-REST-consupmtion.git"
+  },
+  "keywords": ["education", "platzi", "api_rest"],
+  "author": "Sergio Lopez <sergioawaken@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lopezolidev/movies-app-API-REST-consupmtion/issues"
+  },
+  "homepage": "https://github.com/lopezolidev/movies-app-API-REST-consupmtion#readme"
+}
