@@ -1,0 +1,37 @@
+const URL= "https://api.themoviedb.org/3/";
+const baseImgURL = "https://image.tmdb.org/t/p/w500/"
+//fixing size to 500 pixels
+
+
+async function getTrendingMovies(){
+    const res = await fetch(`${URL}/trending/movie/day?api_key=${API_KEY}`);
+    const data = await res.json();
+    const results = data.results;
+    
+    const trendingPreviewMovieContainer = document.querySelector('#trendingPreview .trendingPreview-movieList')
+    const trendingMovies = [];
+    //selecting outside rendering function the container where movies will be displayed.
+    //array of trending movies
+
+    results.forEach(movie => {
+        const movieContainer = document.createElement('div');
+        movieContainer.classList.add('movie-container');
+
+        const movieImage = document.createElement('img');
+        movieImage.classList.add('movie-img');
+
+        movieImage.setAttribute('alt', movie.title);
+        movieImage.setAttribute('src', `${baseImgURL}${movie.poster_path}`)
+
+        movieContainer.append(movieImage)
+        trendingMovies.push(movieContainer)
+
+        //creating each movie container with is image
+        //inserting each container inside the movieContainer array
+    });
+
+    trendingPreviewMovieContainer.append(...trendingMovies)
+    //appending movies array in the trending movies section, loading the DOM only once
+}
+
+getTrendingMovies()

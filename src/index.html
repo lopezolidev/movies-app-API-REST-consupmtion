@@ -4,11 +4,128 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PlatziMovies</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@700;800&family=Red+Hat+Display:wght@400;500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="./assets/styles.css">
+    <title>PlatziMovies</title>
 </head>
 <body>
-    <h1>PlatziMovies</h1>
+    <header id="header" class="header-container">
+        <span class="header-arrow inactive">&lt;</span>
+        <h1 class="header-title">PlatziMovies</h1>
+        <h1 class="header-title header-title--categoryView inactive">Action</h1>
+        <form id="searchForm" class="header-searchForm">
+            <input type="text" placeholder="Browse..." />
+            <button>🔍</button>
+        </form>
+    </header>
+    
+    <section id="trendingPreview" class="trendingPreview-container">
+        <div class="trendingPreview-header">
+            <h2 class="trendingPreview-title">Trending</h2>
+            <button class="trendingPreview-btn">More</button>
+        </div>
+        <article class="trendingPreview-movieList">
+            <!-- <div class="movie-container">
+                <img
+                    src="https://movieweb.com/wp-content/uploads/2022/02/TheBatman2.jpeg"
+                    class="movie-img"
+                    alt="movie name"
+                />
+            </div> --> 
+            <!-- model for movies container -->
+        </article>
+    </section>
+
+    <section id="categoriesPreview" class="categoriesPreview-container">
+        <h2 class="categoriesPreview-title">Categories</h2>
+        <article class="categoriesPreview-list">
+            <div class="category-container">
+                <h3 id="id28" class="category-title">Romance</h3>
+            </div>
+            <div class="category-container">
+                <h3 id="id16" class="category-title">Drama</h3>
+            </div>
+            <div class="category-container">
+                <h3 id="id14" class="category-title">Action</h3>
+            </div>
+        </article>
+    </section>
+    
+    <section id="genericList" class="genericList-container inactive">
+        <div class="movie-container">
+            <img
+                src="https://movieweb.com/wp-content/uploads/2022/02/TheBatman2.jpeg"
+                class="movie-img"
+                alt="movie name"
+            />
+        </div>
+        <div class="movie-container">
+            <img
+                src="https://movieweb.com/wp-content/uploads/2022/02/TheBatman2.jpeg"
+                class="movie-img"
+                alt="movie name"
+            />
+        </div>
+        <div class="movie-container">
+            <img
+                src="https://movieweb.com/wp-content/uploads/2022/02/TheBatman2.jpeg"
+                class="movie-img"
+                alt="movie name"
+            />
+        </div>
+    </section>
+    
+    <section id="movieDetail" class="movieDetail-container inactive">
+        <h1 class="movieDetail-title">Deadpool</h1>
+        <span class="movieDetail-score">7.6</span>
+        <p class="movieDetail-description">
+        Wisecracking mercenary Deadpool battles the evil and powerful Cable and other bad guys to save a boy's life.
+        </p>
+        
+        <article class="categories-list">
+            <div class="category-container">
+                <h3 id="id28" class="category-title">Romance</h3>
+            </div>
+            <div class="category-container">
+                <h3 id="id16" class="category-title">Drama</h3>
+            </div>
+            <div class="category-container">
+                <h3 id="id14" class="category-title">Action</h3>
+            </div>    
+        </article>
+    
+        <article class="relatedMovies-container">
+            <h2 class="relatedMovies-title">Similar movies</h2>
+            <div class="relatedMovies-scrollContainer">
+                <div class="movie-container">
+                    <img
+                        src="https://movieweb.com/wp-content/uploads/2022/02/TheBatman2.jpeg"
+                        class="movie-img"
+                        alt="movie name"
+                    />
+                </div>
+                <div class="movie-container">
+                    <img
+                        src="https://movieweb.com/wp-content/uploads/2022/02/TheBatman2.jpeg"
+                        class="movie-img"
+                        alt="movie name"
+                    />
+                </div>
+                <div class="movie-container">
+                    <img
+                        src="https://movieweb.com/wp-content/uploads/2022/02/TheBatman2.jpeg"
+                        class="movie-img"
+                        alt="movie name"
+                    />
+                </div>
+            </div>
+        </article>
+    </section>
+    <footer>
+        A  <a href="#">@lopezolidev</a> creation
+    </footer>
     <script src="./secret.js"></script>
     <script src="./logic.js"></script>
 </body>
