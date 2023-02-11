@@ -24,10 +24,13 @@ async function getTrendingMovies(){
     // const data = await res.json();
     //using Axios results in a simpler code
     
-    const trendingPreviewMovieContainer = document.querySelector('#trendingPreview .trendingPreview-movieList')
+    //const trendingMoviePreviewList = document.querySelector('#trendingPreview .trendingPreview-movieList')
+    
     const trendingMovies = [];
     //selecting outside rendering function the container where movies will be displayed.
     //array of trending movies
+
+    console.log('hello')
 
     results.forEach(movie => {
         const movieContainer = document.createElement('div');
@@ -46,7 +49,7 @@ async function getTrendingMovies(){
         //inserting each container inside the movieContainer array
     });
 
-    trendingPreviewMovieContainer.append(...trendingMovies)
+    trendingMoviePreviewList.append(...trendingMovies)
     //appending movies array in the trending movies section, loading the DOM only once
 }
 
@@ -54,7 +57,8 @@ async function getCategoriesPreview(){
     const { data } = await api('/genre/movie/list');
     const results = data.genres;
     
-    const previewCategoriesContainer = document.querySelector('#categoriesPreview .categoriesPreview-list')
+    // const previewCategoriesContainer = document.querySelector('#categoriesPreview .categoriesPreview-list')
+    
     const categoriesArray = [];
 
     results.forEach(category => {
@@ -71,6 +75,6 @@ async function getCategoriesPreview(){
         categoriesArray.push(categoryContainer);
     });
 
-    previewCategoriesContainer.append(...categoriesArray);
+    categoriesPreviewList.append(...categoriesArray);
 }
 
