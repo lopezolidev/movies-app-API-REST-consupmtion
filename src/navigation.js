@@ -53,8 +53,17 @@ function homePage(){
     genericSection.classList.add('inactive');
     movieDetailSection.classList.add('inactive');
 
-    getTrendingMovies();
-    getCategoriesPreview();    
+    const moviesChildren = (trendingMoviePreviewList.children[0]);
+    // console.log(moviesChildren)
+    const catChildren = categoriesPreviewList.children[0];
+    // console.log(children)
+
+    if(!moviesChildren && !catChildren) {
+        getTrendingMovies();
+        getCategoriesPreview();   
+    }
+    //if there's already any element in both containers, we won't call the API, that way optimizing the API consumption and not overloading the memory of the navigator
+
 }
 //only calling movies and categories preview rendering when on Home page
 
@@ -94,6 +103,28 @@ function categoriesPage(){
     categoryPreviewSection.classList.add('inactive');
     genericSection.classList.remove('inactive');
     movieDetailSection.classList.add('inactive');
+
+    /* const id = location.hash.replace('#category=', '');
+     //selecting substring from <category-id>-<category-name>
+
+     const indexOfcategory = id.indexOf('-')
+     //obtaining index of the '-' to know where will be selection limit
+
+     const catId = id.slice(0, indexOfcategory)
+     //selecting the specific number from the substring
+
+     console.log(id)
+     console.log(indexOfcategory)
+     console.log(id.length)
+    */ console.log(catId)
+
+    //Easier solution to selecting category id ↓
+    const [_, categoryData] = location.hash.split('='); // ['#category', 'id-name']
+    
+    const [categoryId, categoryName] = categoryData.split('-'); // ['id', 'name']
+    //taking advantage of ES6 syntax for destructuring the array elements
+
+    getMoviesByCategory(categoryId)
 }
 
 function searchPage(){
