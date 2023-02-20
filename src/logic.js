@@ -32,22 +32,8 @@ async function getTrendingMovies(){
 
     console.log('hello')
 
-    results.forEach(movie => {
-        const movieContainer = document.createElement('div');
-        movieContainer.classList.add('movie-container');
-
-        const movieImage = document.createElement('img');
-        movieImage.classList.add('movie-img');
-
-        movieImage.setAttribute('alt', movie.title);
-        movieImage.setAttribute('src', `${baseImgURL}${movie.poster_path}`)
-
-        movieContainer.append(movieImage)
-        trendingMovies.push(movieContainer)
-
-        //creating each movie container with is image
-        //inserting each container inside the movieContainer array
-    });
+    results.forEach(movie => renderMovies(movie, trendingMovies));
+    //renderMovies solves the DRY issue
 
     trendingMoviePreviewList.append(...trendingMovies)
     //appending movies array in the trending movies section, loading the DOM only once
@@ -81,7 +67,10 @@ async function getCategoriesPreview(){
         categoriesPreviewList.append(...categoriesArray);
 }
 
-async function getMoviesByCategory(id){
+async function getMoviesByCategory(id, name){
+    window.scrollTo({top: 0, behavior: 'smooth'});
+    //using scrollTo event, scrolling to the top of the page instantly
+
     const { data } = await api('discover/movie', {
         params: {
             with_genres: id
@@ -99,25 +88,28 @@ async function getMoviesByCategory(id){
     //selecting outside rendering function the container where movies will be displayed.
     //array of trending movies
 
-    console.log('hello')
+    headerCategoryTitle.innerText = name;
 
-    results.forEach(movie => {
-        const movieContainer = document.createElement('div');
-        movieContainer.classList.add('movie-container');
+    genericSection.innerHTML = " ";
 
-        const movieImage = document.createElement('img');
-        movieImage.classList.add('movie-img');
+    results.forEach( movie => renderMovies(movie, trendingMovies));
 
-        movieImage.setAttribute('alt', movie.title);
-        movieImage.setAttribute('src', `${baseImgURL}${movie.poster_path}`)
-
-        movieContainer.append(movieImage)
-        trendingMovies.push(movieContainer)
-
-        //creating each movie container with is image
-        //inserting each container inside the movieContainer array
-    });
-
-    trendingMoviePreviewList.append(...trendingMovies)
+    genericSection.append(...trendingMovies)
     //appending movies array in the trending movies section, loading the DOM only once
+}
+
+function renderMovies(movie, moviesArray){
+    const movieContainer = document.createElement('div');
+    movieContainer.classList.add('movie-container');
+
+    const movieImage = document.createElement('img');
+    movieImage.classList.add('movie-img');
+
+    movieImage.setAttribute('alt', movie.title);
+    movieImage.setAttribute('src', `${baseImgURL}${movie.poster_path}`);
+
+    movieContainer.append(movieImage);
+    moviesArray.push(movieContainer);
+    //creating each movie container with is image
+    //inserting each container inside the movieContainer array
 }

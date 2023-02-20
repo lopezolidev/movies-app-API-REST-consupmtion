@@ -53,7 +53,7 @@ function homePage(){
     genericSection.classList.add('inactive');
     movieDetailSection.classList.add('inactive');
 
-    const moviesChildren = (trendingMoviePreviewList.children[0]);
+    const moviesChildren = trendingMoviePreviewList.children[0];
     // console.log(moviesChildren)
     const catChildren = categoriesPreviewList.children[0];
     // console.log(children)
@@ -113,10 +113,10 @@ function categoriesPage(){
      const catId = id.slice(0, indexOfcategory)
      //selecting the specific number from the substring
 
-     console.log(id)
-     console.log(indexOfcategory)
-     console.log(id.length)
-    */ console.log(catId)
+        console.log(id)
+        console.log(indexOfcategory)
+        console.log(id.length)
+        console.log(catId) */
 
     //Easier solution to selecting category id ↓
     const [_, categoryData] = location.hash.split('='); // ['#category', 'id-name']
@@ -124,7 +124,11 @@ function categoriesPage(){
     const [categoryId, categoryName] = categoryData.split('-'); // ['id', 'name']
     //taking advantage of ES6 syntax for destructuring the array elements
 
-    getMoviesByCategory(categoryId)
+    let moviesCategoriesChildren = genericSection.children;
+    // console.log(moviesCategoriesChildren)
+
+    getMoviesByCategory(categoryId, categoryName);
+
 }
 
 function searchPage(){
