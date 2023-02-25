@@ -14,9 +14,52 @@ const api = axios.create({
 });
 // creating axios instance
 
+// Utils
+
+function renderMovies(movies, moviesArray){
+    movies.forEach( movie => {
+        const movieContainer = document.createElement('div');
+        movieContainer.classList.add('movie-container');
+
+        const movieImage = document.createElement('img');
+        movieImage.classList.add('movie-img');
+
+        movieImage.setAttribute('alt', movie.title);
+        movieImage.setAttribute('src', `${baseImgURL}${movie.poster_path}`);
+
+        movieContainer.append(movieImage);
+        moviesArray.push(movieContainer);
+        //creating each movie container with is image
+        //inserting each container inside the movieContainer array
+    })
+    
+}
+
+function renderCategories(categories, array){
+
+    categories.forEach(category => {
+    
+        const categoryContainer = document.createElement('div');
+        categoryContainer.classList.add('category-container');
+
+        const categoryTitle = document.createElement('h3');
+        categoryTitle.classList.add('category-title');
+        categoryTitle.setAttribute('id', `id${category.id}`);
+        categoryTitle.addEventListener('click', () => {
+            location.hash = `#category=${category.id}-${category.name}`
+        }) //adding the click event to the category name button to change the hash from location. That way navigating through categories and filtering movies according to this criteria
+
+        categoryTitle.textContent = category.name;
+
+        categoryContainer.append(categoryTitle);
+        array.push(categoryContainer);
+    });
+}
+
+//functions
 
 
-async function getTrendingMovies(){
+async function getTrendingMoviesPreview(){
     const { data } = await api('/trending/movie/day');
     //destructuring response object into data only
     const results = data.results;
@@ -24,15 +67,12 @@ async function getTrendingMovies(){
     // const data = await res.json();
     //using Axios results in a simpler code
     
-    //const trendingMoviePreviewList = document.querySelector('#trendingPreview .trendingPreview-movieList')
-    
     const trendingMovies = [];
     //selecting outside rendering function the container where movies will be displayed.
     //array of trending movies
 
-    console.log('hello')
-
-    results.forEach(movie => renderMovies(movie, trendingMovies));
+    renderMovies(results, trendingMovies)
+    // results.forEach(movie => renderMovies(movie, trendingMovies));
     //renderMovies solves the DRY issue
 
     trendingMoviePreviewList.append(...trendingMovies)
@@ -46,30 +86,14 @@ async function getCategoriesPreview(){
         // const previewCategoriesContainer = document.querySelector('#categoriesPreview .categoriesPreview-list')
         
         const categoriesArray = [];
-    
-        results.forEach(category => {
-    
-            const categoryContainer = document.createElement('div');
-            categoryContainer.classList.add('category-container');
-    
-            const categoryTitle = document.createElement('h3');
-            categoryTitle.classList.add('category-title');
-            categoryTitle.setAttribute('id', `id${category.id}`);
-            categoryTitle.addEventListener('click', () => {
-                location.hash = `#category=${category.id}-${category.name}`
-            }) //adding the click event to the category name button to change the hash from location. That way navigating through categories and filtering movies according to this criteria
 
-            categoryTitle.textContent = category.name;
-    
-            categoryContainer.append(categoryTitle);
-            categoriesArray.push(categoryContainer);
-        });
+        renderCategories(results, categoriesArray);
+        //abstracting this categories rendering forEach with an Util function
+
         categoriesPreviewList.append(...categoriesArray);
 }
 
 async function getMoviesByCategory(id, name){
-    window.scrollTo({top: 0, behavior: 'smooth'});
-    //using scrollTo event, scrolling to the top of the page instantly
 
     const { data } = await api('discover/movie', {
         params: {
@@ -77,39 +101,58 @@ async function getMoviesByCategory(id, name){
         }
     });
     //destructuring response object into data only
+    
     const results = data.results;
 
     // const data = await res.json();
     //using Axios results in a simpler code
     
-    //const trendingMoviePreviewList = document.querySelector('#trendingPreview .trendingPreview-movieList')
-    
     const trendingMovies = [];
     //selecting outside rendering function the container where movies will be displayed.
     //array of trending movies
 
-    headerCategoryTitle.innerText = name;
+    const nameWithout20 = name.replaceAll('%20', ' ');
+
+    headerCategoryTitle.innerText = nameWithout20;
 
     genericSection.innerHTML = " ";
 
-    results.forEach( movie => renderMovies(movie, trendingMovies));
+    renderMovies(results, trendingMovies)
+    // results.forEach( movie => renderMovies(movie, trendingMovies));
 
     genericSection.append(...trendingMovies)
     //appending movies array in the trending movies section, loading the DOM only once
 }
 
-function renderMovies(movie, moviesArray){
-    const movieContainer = document.createElement('div');
-    movieContainer.classList.add('movie-container');
+async function getMoviesBySearch(searchValue){
+    const { data } = await api(`search/movie`, {
+        params: {
+            query: searchValue
+        }
+    });
 
-    const movieImage = document.createElement('img');
-    movieImage.classList.add('movie-img');
+    const results = data.results;
 
-    movieImage.setAttribute('alt', movie.title);
-    movieImage.setAttribute('src', `${baseImgURL}${movie.poster_path}`);
+    const trendingMovies = [];
 
-    movieContainer.append(movieImage);
-    moviesArray.push(movieContainer);
-    //creating each movie container with is image
-    //inserting each container inside the movieContainer array
+    genericSection.innerHTML = " ";
+
+    renderMovies(results, trendingMovies)
+
+    genericSection.append(...trendingMovies)
+
+}
+
+async function getTrendingMovies(){
+    const { data } = await api('/trending/movie/day');
+    const results = data.results;
+    
+    const trendingMovies = [];
+    
+    renderMovies(results, trendingMovies)
+    // results.forEach(movie => renderMovies(movie, trendingMovies));
+    //renderMovies solves the DRY issue
+
+    genericSection.append(...trendingMovies)
+    //appending movies array in the trending movies section, loading the DOM only once
 }

@@ -1,19 +1,26 @@
 searchFormBtn.addEventListener('click', () => {
-    location.hash = '#search='
+    location.hash = '#search=' + searchFormInput.value;
 });
 
 trendingBtn.addEventListener('click', () => {
     location.hash = '#trends'
 });
 
+
+window.addEventListener('DOMContentLoaded', navigator, false);
+
+window.addEventListener('hashchange', navigator, false);
+//both events for navigating in the page, allowing to navigate with different hashes and when the whole page loads
+
 arrowBtn.addEventListener('click', () => {
-    location.hash = '#home'
+        window.history.back();  // this method makes us go back to the previous page
+    
+        /*  
+        location.hash = '#home'
+    */
 });
 
 
-window.addEventListener('DOMContentLoaded', navigator, false);
-window.addEventListener('hashchange', navigator, false);
-//both events for navigating in the page, allowing to navigate with different hashes and when the whole page loads
 
 
 function navigator(){
@@ -30,6 +37,9 @@ function navigator(){
     } else {
         homePage()
     }
+
+    window.scrollTo({top: 0, behavior: 'smooth'});
+    //using scrollTo event, scrolling to the top of the page instantly
 }
 
 function homePage(){
@@ -59,7 +69,7 @@ function homePage(){
     // console.log(children)
 
     if(!moviesChildren && !catChildren) {
-        getTrendingMovies();
+        getTrendingMoviesPreview();
         getCategoriesPreview();   
     }
     //if there's already any element in both containers, we won't call the API, that way optimizing the API consumption and not overloading the memory of the navigator
@@ -128,7 +138,6 @@ function categoriesPage(){
     // console.log(moviesCategoriesChildren)
 
     getMoviesByCategory(categoryId, categoryName);
-
 }
 
 function searchPage(){
@@ -140,14 +149,23 @@ function searchPage(){
     arrowBtn.classList.remove('inactive');
     arrowBtn.classList.remove('header-arrow--white');
 
+    // goBackButton.addEventListener('click', () => {
+    //     history.back();
+    // })
+
     headerTitle.classList.add('inactive');
-    headerCategoryTitle.classList.remove('inactive');
+    headerCategoryTitle.classList.add('inactive');
     searchForm.classList.remove('inactive');
 
     trendingPreviewSection.classList.add('inactive');
     categoryPreviewSection.classList.add('inactive');
     genericSection.classList.remove('inactive');
     movieDetailSection.classList.add('inactive');
+
+    const [_, searchParam] = location.hash.split('='); // ['#search', 'value']
+    const query = searchParam.replaceAll('%20', ' ');
+
+    getMoviesBySearch(query);
 }
 
 function trendsPage(){
@@ -167,4 +185,8 @@ function trendsPage(){
     categoryPreviewSection.classList.add('inactive');
     genericSection.classList.remove('inactive');
     movieDetailSection.classList.add('inactive');
+
+    headerCategoryTitle.innerText = 'Trending';
+
+    getTrendingMovies();
 }
