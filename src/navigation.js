@@ -176,7 +176,7 @@ function searchPage(){
 function trendsPage(){
     console.log('TRENDS!!!');
 
-    headerSection.classList.remove('.header-container--long');
+    headerSection.classList.remove('header-container--long');
     headerSection.style.background = '';
     
     arrowBtn.classList.remove('inactive');
