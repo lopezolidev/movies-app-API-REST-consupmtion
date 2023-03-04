@@ -21,6 +21,10 @@ function renderMovies(movies, moviesArray){
         const movieContainer = document.createElement('div');
         movieContainer.classList.add('movie-container');
 
+        movieContainer.addEventListener('click', () => {
+            location.hash = `#movie=${movie.id}`;
+        }) //this way we're setting the view of movie details according the specific movie we click
+
         const movieImage = document.createElement('img');
         movieImage.classList.add('movie-img');
 
@@ -155,4 +159,49 @@ async function getTrendingMovies(){
 
     genericSection.append(...trendingMovies)
     //appending movies array in the trending movies section, loading the DOM only once
+}
+
+async function getMovieById(id){
+    const { data: movie} = await api(`movie/${id}`);
+
+    const movieImgUrl = `${baseImgURL}${movie.poster_path}`
+    //getting the image from the movie we're checking the details
+
+    headerSection.style.background = `
+    linear-gradient(
+        180deg, 
+        rgba(0, 0, 0, 0.35) 19.27%, 
+        rgba(0, 0, 0, 0) 29.17%
+        ),
+    url(${movieImgUrl})
+    `;
+
+    movieDetailTitle.textContent = movie.title;
+    movieDetailDescription.textContent = movie.overview;
+    movieDetailScore.textContent = ((movie.vote_average*10) /10).toFixed(1);
+
+    genresList = [];
+
+    movieDetailCategoriesList.innerHTML = " ";
+
+    renderCategories(movie.genres, genresList);
+    
+    movieDetailCategoriesList.append(...genresList);
+    
+    getRelatedMoviesById(id);
+}
+
+async function getRelatedMoviesById(id){
+    const { data} = await api(`movie/${id}/similar`);
+    const relatedMovies = data.results;
+
+    const relatedMoviesArray = [];
+
+    relatedMoviesContainer.innerHTML = " ";
+
+    renderMovies(relatedMovies, relatedMoviesArray);
+
+    relatedMoviesContainer.append(...relatedMoviesArray);
+    relatedMoviesContainer.scrollTo(0, 0);
+
 }
