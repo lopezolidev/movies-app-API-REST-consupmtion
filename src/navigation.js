@@ -63,15 +63,18 @@ function homePage(){
     genericSection.classList.add('inactive');
     movieDetailSection.classList.add('inactive');
 
-    const moviesChildren = trendingMoviePreviewList.children[0];
-    // console.log(moviesChildren)
-    const catChildren = categoriesPreviewList.children[0];
-    // console.log(children)
+    // trendingMoviesSkeleton.classList.remove('inactive');
+    // skeletonMovieContainer.classList.remove('inactive');
 
-    if(!moviesChildren && !catChildren) {
+    // const moviesChildren = trendingMoviePreviewList.children[0];
+    // // console.log(moviesChildren)
+    // const catChildren = categoriesPreviewList.children[0];
+    // // console.log(children)
+
+    // if(!moviesChildren && !catChildren) {
         getTrendingMoviesPreview();
         getCategoriesPreview();   
-    }
+    // }
     //if there's already any element in both containers, we won't call the API, that way optimizing the API consumption and not overloading the memory of the navigator
 
 }

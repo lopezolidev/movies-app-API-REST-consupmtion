@@ -17,6 +17,7 @@ const api = axios.create({
 // Utils
 
 function renderMovies(movies, moviesArray){
+
     movies.forEach( movie => {
         const movieContainer = document.createElement('div');
         movieContainer.classList.add('movie-container');
@@ -79,6 +80,8 @@ async function getTrendingMoviesPreview(){
     // results.forEach(movie => renderMovies(movie, trendingMovies));
     //renderMovies solves the DRY issue
 
+    trendingMoviePreviewList.innerHTML = '';
+
     trendingMoviePreviewList.append(...trendingMovies)
     //appending movies array in the trending movies section, loading the DOM only once
 }
@@ -93,6 +96,8 @@ async function getCategoriesPreview(){
 
         renderCategories(results, categoriesArray);
         //abstracting this categories rendering forEach with an Util function
+
+        categoriesPreviewList.innerHTML = ' ';
 
         categoriesPreviewList.append(...categoriesArray);
 }

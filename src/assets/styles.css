@@ -26,6 +26,8 @@
    --font-weight-title2: 700;
    --font-weight-text1: 400;
    --font-weight-text2: 500;
+
+   --loading-skeleton-color: #DAD7F0;
 }
 
 html {
@@ -105,6 +107,34 @@ body {
    cursor: pointer;
  }
  
+ .skel-movie-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+ } 
+
+ .movie-container--loading {
+  background: var(--purple-light-2);
+  border-radius: 0.8rem;
+  height: 22.5rem;
+  min-height: 22.5rem;
+  max-height: 22.5rem;
+  width: 15rem;
+  min-width: 15rem;
+  max-width: 15rem;
+  margin-bottom: 1.5rem;
+  animation: loading-skeleton infinite 1.5s;
+ }
+
+ .movie-container--loading:nth-child(2) {
+  animation-delay: .2s;
+ }
+
+ .movie-container--loading:nth-child(3) {
+  animation-delay: .4s;
+ }
+
+
  .movie-img {
    border-radius: 0.8rem;
  }
@@ -117,6 +147,23 @@ body {
    grid-gap: 0.6rem;
  } /* implementing grid simplifying placement of categories containers */
  
+ .category-container--loading {
+  background: var(--purple-light-2);
+  border-radius: 0.8rem;
+  height: 2.5rem;
+  min-height: 2.5rem;
+  max-height: 2.5rem;
+  width: 15rem;
+  min-width: 15rem;
+  max-width: 15rem;
+  margin-bottom: 1.5rem;
+  animation: loading-skeleton infinite 1.5s;
+ }
+
+ .category-container--loading:nth-child(2){
+  animation-delay: .2s;
+ } /*animation and styles for loading categories container*/
+
  /* Header */
  .header-container {
    padding-block-start: 4rem;
@@ -206,7 +253,7 @@ body {
    padding-inline: 0.8rem;
  }
  
- .trendingPreview-movieList .movie-container .movie-img {
+ .trendingPreview-movieList .movie-container .movie-img{
    height: 22.5rem;
    min-height: 22.5rem;
    max-height: 22.5rem;
@@ -215,6 +262,22 @@ body {
    max-width: 15rem;
  }
  
+ /* Loading skeletons - Trending movies */
+ /* .skel-mc-wrapper{
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  height: 24rem;
+  width: 70rem;
+  display: flex;
+  gap: 1rem;
+ }
+
+ .trendingPreview-movieList .skel-movie-container{
+    background-color: var(--loading-skeleton-color);
+    border-radius: 1rem;
+    width: 15rem;
+  } */
  
  /* Categories */
  .category-container {
@@ -367,3 +430,13 @@ footer a {
  .inactive {
    display: none;
  }
+
+ /* Animations */
+@keyframes loading-skeleton {
+  0%, 100%{
+    opacity: 100%;
+  }
+  50% {
+    opacity: 0%;
+  }
+} /*Animation for loading skeleton*/
