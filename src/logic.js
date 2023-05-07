@@ -14,9 +14,34 @@ const api = axios.create({
 });
 // creating axios instance
 
+// Intersection observer function
+
+function callbackFun(entries, observer){
+    entries.forEach(entry => {
+        if(entry.isIntersecting){
+            // console.log(entry.target)
+            const url = entry.target.getAttribute('data-img');
+            // console.log(url);
+            entry.target.setAttribute('src', url);
+            observer.unobserve(entry.target); //good practice to stop observing the element once the image is loaded
+        }
+    })
+} //callback function to change the dataset attribute to src and load the image
+
+function createObserver(handler, ops){
+    const observer = new IntersectionObserver(handler, ops);
+    
+    return observer;
+} //function to create intersectionObserver instances
+
+let observer = createObserver(callbackFun); //instancing the observer
+
+
+
 // Utils
 
-function renderMovies(movies, moviesArray){
+function renderMovies(movies, moviesArray, lazyLoad = false){
+    genericSection.innerHTML = " "; //deleting loading skeleton
 
     movies.forEach( movie => {
         const movieContainer = document.createElement('div');
@@ -26,13 +51,47 @@ function renderMovies(movies, moviesArray){
             location.hash = `#movie=${movie.id}`;
         }) //this way we're setting the view of movie details according the specific movie we click
 
-        const movieImage = document.createElement('img');
-        movieImage.classList.add('movie-img');
+        if(movie.poster_path == null){
+            console.log('null');
+            console.log({movie})
 
-        movieImage.setAttribute('alt', movie.title);
-        movieImage.setAttribute('src', `${baseImgURL}${movie.poster_path}`);
+            const movieWrapper = document.createElement('div');
 
-        movieContainer.append(movieImage);
+            movieWrapper.classList.add('movie-img--default')
+            
+            const para = document.createElement('h2');
+            para.classList.add('movie-img--text')
+            const textNode = document.createTextNode('???') 
+            para.append(textNode);
+
+            movieWrapper.append(para);
+
+            console.log(movieWrapper)
+
+            movieContainer.append(movieWrapper) //TODO FINISH DEFAULT MOVIE
+        }else {
+            const movieImage = document.createElement('img');
+            movieImage.classList.add('movie-img');
+
+            movieImage.setAttribute('alt', movie.title);
+            if(lazyLoad){
+                movieImage.setAttribute('data-img', `${baseImgURL}${movie.poster_path}`)
+            } else {
+                movieImage.setAttribute('src', `${baseImgURL}${movie.poster_path}`);
+
+            } //conditional to find out when to load the movie with dataset attribute instead of src
+            
+            movieContainer.append(movieImage);
+
+            if(lazyLoad){
+                observer.observe(movieImage); //calling the method of observe for each image when lazyLoad is true
+            }
+        }
+
+        
+        
+        
+
         moviesArray.push(movieContainer);
         //creating each movie container with is image
         //inserting each container inside the movieContainer array
@@ -76,7 +135,7 @@ async function getTrendingMoviesPreview(){
     //selecting outside rendering function the container where movies will be displayed.
     //array of trending movies
 
-    renderMovies(results, trendingMovies)
+    renderMovies(results, trendingMovies, true)
     // results.forEach(movie => renderMovies(movie, trendingMovies));
     //renderMovies solves the DRY issue
 
@@ -124,7 +183,7 @@ async function getMoviesByCategory(id, name){
 
     headerCategoryTitle.innerText = nameWithout20;
 
-    genericSection.innerHTML = " ";
+    // genericSection.innerHTML = " ";
 
     renderMovies(results, trendingMovies)
     // results.forEach( movie => renderMovies(movie, trendingMovies));
@@ -144,9 +203,9 @@ async function getMoviesBySearch(searchValue){
 
     const trendingMovies = [];
 
-    genericSection.innerHTML = " ";
+    // genericSection.innerHTML = " "; //deleting loading skeleton
 
-    renderMovies(results, trendingMovies)
+    renderMovies(results, trendingMovies, true)
 
     genericSection.append(...trendingMovies)
 
@@ -158,7 +217,9 @@ async function getTrendingMovies(){
     
     const trendingMovies = [];
     
-    renderMovies(results, trendingMovies)
+    // genericSection.innerHTML = " ";
+    
+    renderMovies(results, trendingMovies, true)
     // results.forEach(movie => renderMovies(movie, trendingMovies));
     //renderMovies solves the DRY issue
 
@@ -209,4 +270,10 @@ async function getRelatedMoviesById(id){
     relatedMoviesContainer.append(...relatedMoviesArray);
     relatedMoviesContainer.scrollTo(0, 0);
 
+}
+
+const callback = (entries) => {
+    entries.forEach(element => {
+        element.src;
+    })
 }

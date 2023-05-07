@@ -116,6 +116,7 @@ body {
  .movie-container--loading {
   background: var(--purple-light-2);
   border-radius: 0.8rem;
+  aspect-ratio: 22.5rem / 15rem;
   height: 22.5rem;
   min-height: 22.5rem;
   max-height: 22.5rem;
@@ -134,6 +135,19 @@ body {
   animation-delay: .4s;
  }
 
+ .movie-img--default {
+  width: 12.5rem;
+  height: 18.75rem;
+  background-color: var(--purple-medium-3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ }
+
+ .movie-img--text {
+  color: var(--purple-light-1);
+  word-break: normal;
+ }
 
  .movie-img {
    border-radius: 0.8rem;
@@ -391,7 +405,9 @@ body {
    overflow-y: hidden;
    white-space: nowrap;
    width: calc(100vw - 2.4rem);
-   padding-bottom: 1.6rem;
+   padding-bottom: 10.6rem;
+   display: flex;
+   align-items: center;
  }
  
  .relatedMovies-scrollContainer .movie-container {
