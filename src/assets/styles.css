@@ -146,7 +146,9 @@ body {
 
  .movie-img--text {
   color: var(--purple-light-1);
-  word-break: normal;
+  word-break: break-all;
+  word-wrap: break-word;
+  width: 100%;
  }
 
  .movie-img {
@@ -408,6 +410,7 @@ body {
    padding-bottom: 10.6rem;
    display: flex;
    align-items: center;
+   gap: 0.8rem;
  }
  
  .relatedMovies-scrollContainer .movie-container {

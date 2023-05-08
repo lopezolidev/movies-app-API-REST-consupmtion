@@ -59,16 +59,24 @@ function renderMovies(movies, moviesArray, lazyLoad = false){
 
             movieWrapper.classList.add('movie-img--default')
             
-            const para = document.createElement('h2');
-            para.classList.add('movie-img--text')
-            const textNode = document.createTextNode('???') 
-            para.append(textNode);
+            const para = document.createElement('p');
+            
+            para.innerText = movie.title;
+            
+            console.log({para})
+            
+
+            // para.append(textNode);
+            para.classList.add('movie-img--text');
 
             movieWrapper.append(para);
 
             console.log(movieWrapper)
 
-            movieContainer.append(movieWrapper) //TODO FINISH DEFAULT MOVIE
+            movieContainer.append(movieWrapper) 
+            
+//  ------------------------------------------>        TODO FINISH DEFAULT MOVIE    <------------------------------------------//
+
         }else {
             const movieImage = document.createElement('img');
             movieImage.classList.add('movie-img');
@@ -185,7 +193,7 @@ async function getMoviesByCategory(id, name){
 
     // genericSection.innerHTML = " ";
 
-    renderMovies(results, trendingMovies)
+    renderMovies(results, trendingMovies, true)
     // results.forEach( movie => renderMovies(movie, trendingMovies));
 
     genericSection.append(...trendingMovies)
