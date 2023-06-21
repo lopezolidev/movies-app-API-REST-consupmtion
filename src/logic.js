@@ -21,7 +21,7 @@ function callbackFun(entries, observer){
         if(entry.isIntersecting){
             // console.log(entry.target)
             const url = entry.target.getAttribute('data-img');
-            // console.log(url);
+            // console.log(entry);
             entry.target.setAttribute('src', url);
             observer.unobserve(entry.target); //good practice to stop observing the element once the image is loaded
         }
@@ -40,9 +40,16 @@ let observer = createObserver(callbackFun); //instancing the observer
 
 // Utils
 
-function renderMovies(movies, moviesArray, lazyLoad = false){
-    genericSection.innerHTML = " "; //deleting loading skeleton
-
+function renderMovies(
+    movies, 
+    moviesArray, 
+    {lazyLoad = false,
+    clean = true} = {}
+    ){
+    if(clean){
+        genericSection.innerHTML = " "; //deleting loading skeleton → if we want that container to be cleared every time we load that section, if not the content will stack tops to bottom
+    }
+    
     movies.forEach( movie => {
         const movieContainer = document.createElement('div');
         movieContainer.classList.add('movie-container');
@@ -51,33 +58,33 @@ function renderMovies(movies, moviesArray, lazyLoad = false){
             location.hash = `#movie=${movie.id}`;
         }) //this way we're setting the view of movie details according the specific movie we click
 
-        if(movie.poster_path == null){
-            console.log('null');
-            console.log({movie})
+//         if(movie.poster_path == null){
+//             console.log('null');
+//             console.log({movie})
 
-            const movieWrapper = document.createElement('div');
+//             const movieWrapper = document.createElement('div');
 
-            movieWrapper.classList.add('movie-img--default')
+//             movieWrapper.classList.add('movie-img--default')
             
-            const para = document.createElement('p');
+//             const para = document.createElement('p');
             
-            para.innerText = movie.title;
+//             para.innerText = movie.title;
             
-            console.log({para})
+//             console.log({para})
             
 
-            // para.append(textNode);
-            para.classList.add('movie-img--text');
+//             // para.append(textNode);
+//             para.classList.add('movie-img--text');
 
-            movieWrapper.append(para);
+//             movieWrapper.append(para);
 
-            console.log(movieWrapper)
+//             console.log(movieWrapper)
 
-            movieContainer.append(movieWrapper) 
+//             movieContainer.append(movieWrapper) 
             
-//  ------------------------------------------>        TODO FINISH DEFAULT MOVIE    <------------------------------------------//
+// //  ------------------------------------------>        TODO FINISH DEFAULT MOVIE    <------------------------------------------//
 
-        }else {
+//         }else {
             const movieImage = document.createElement('img');
             movieImage.classList.add('movie-img');
 
@@ -88,13 +95,18 @@ function renderMovies(movies, moviesArray, lazyLoad = false){
                 movieImage.setAttribute('src', `${baseImgURL}${movie.poster_path}`);
 
             } //conditional to find out when to load the movie with dataset attribute instead of src
-            
+            movieImage.addEventListener('error', () => {
+                movieImage.setAttribute('src', 'https://images.pexels.com/photos/274937/pexels-photo-274937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')
+            }) //strategy to load default image if there's an error in imdb
+
             movieContainer.append(movieImage);
+
+
 
             if(lazyLoad){
                 observer.observe(movieImage); //calling the method of observe for each image when lazyLoad is true
             }
-        }
+        // }
 
         
         
@@ -219,20 +231,41 @@ async function getMoviesBySearch(searchValue){
 
 }
 
-async function getTrendingMovies(){
-    const { data } = await api('/trending/movie/day');
+async function getTrendingMovies(page = 1){
+
+    const { data } = await api('/trending/movie/day', {
+        params: {
+            page,
+        }
+    });
     const results = data.results;
     
     const trendingMovies = [];
     
-    // genericSection.innerHTML = " ";
-    
-    renderMovies(results, trendingMovies, true)
+    // genericSection.innerHTML = " ";    
+
+
+    renderMovies(
+        results, 
+        trendingMovies, 
+        {lazyLoad: true,
+        clean: page == 1}
+        ); //first time we load the content the inner html must be cleared 
     // results.forEach(movie => renderMovies(movie, trendingMovies));
     //renderMovies solves the DRY issue
 
     genericSection.append(...trendingMovies)
     //appending movies array in the trending movies section, loading the DOM only once
+
+    const btnLoadMore = document.createElement('button');
+    btnLoadMore.innerText = 'Load more';
+    btnLoadMore.addEventListener('click', () => {
+        btnLoadMore.classList.add('inactive');
+        getTrendingMovies(page + 1);
+    });
+    //this button will help us to load more content when we want to enable infinite scrolling 
+    
+    genericSection.append(btnLoadMore);
 }
 
 async function getMovieById(id){
