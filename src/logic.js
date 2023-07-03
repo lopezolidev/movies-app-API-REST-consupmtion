@@ -14,6 +14,53 @@ const api = axios.create({
 });
 // creating axios instance
 
+function likedMoviesList(){
+    const item =  JSON.parse(localStorage.getItem('liked_movies'));
+    let movie;
+    
+    if(item){
+        movie = item;
+    } else {
+        movie = {};
+    }
+
+    return movie;
+} // only returns the object containing the liked movies
+
+/*
+    Structure of liked_movies key:
+    {
+        id_movie1: {...data from movie 1}, ← refering to the whole data that conforms a movie, like title, image, container etc.
+        id_movie2: {...data from movie 2},
+        id_movie3: {...data from movie 3},
+        id_movie4: {...data from movie 4},
+        id_movie5: {...data from movie 5},
+    } 
+
+    We're going to sort from this object some movie. If that movie exists then it'll be erase from localStorage, if not it'll be added to the favourite movies list and also to liked_movies
+*/
+
+
+function likeMovie(movie){
+    const likedMovies = likedMoviesList();
+
+    // console.log(likedMovies)
+
+    if(likedMovies[movie.id]){ //checking if such object contains a property known as movie.id
+        likedMovies[movie.id] = undefined; 
+       
+        //if there's a movie with that ID we'll set it as undefined
+    } else {
+        likedMovies[movie.id] = movie; 
+
+        //if that movie.id key doesn't exists, we'll store it
+    }
+
+    localStorage.setItem('liked_movies', JSON.stringify(likedMovies)); //storing the object as it is in localStorage
+
+} // inserting and extracting movie from localStorage 
+
+
 // Intersection observer function
 
 function callbackFun(entries, observer){
@@ -37,8 +84,9 @@ function createObserver(handler, ops){
 let observer = createObserver(callbackFun); //instancing the observer
 
 
-
 // Utils
+
+
 
 function renderMovies(
     movies, 
@@ -54,10 +102,7 @@ function renderMovies(
         const movieContainer = document.createElement('div');
         movieContainer.classList.add('movie-container');
 
-        movieContainer.addEventListener('click', () => {
-            location.hash = `#movie=${movie.id}`;
-        }) //this way we're setting the view of movie details according the specific movie we click
-
+        // movieContainer
 //         if(movie.poster_path == null){
 //             console.log('null');
 //             console.log({movie})
@@ -88,6 +133,10 @@ function renderMovies(
             const movieImage = document.createElement('img');
             movieImage.classList.add('movie-img');
 
+            movieImage.addEventListener('click', () => {
+                location.hash = `#movie=${movie.id}`;
+            }) //this way we're setting the view of movie details according the specific movie we click
+    
             movieImage.setAttribute('alt', movie.title);
             if(lazyLoad){
                 movieImage.setAttribute('data-img', `${baseImgURL}${movie.poster_path}`)
@@ -96,12 +145,33 @@ function renderMovies(
 
             } //conditional to find out when to load the movie with dataset attribute instead of src
             movieImage.addEventListener('error', () => {
-                movieImage.setAttribute('src', 'https://images.pexels.com/photos/274937/pexels-photo-274937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')
+                movieImage.setAttribute('src', 
+                'https://images.pexels.com/photos/274937/pexels-photo-274937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')
             }) //strategy to load default image if there's an error in imdb
 
+            const movieBtn = document.createElement('button');
+
+            const moviesArr = Object.values(likedMoviesList());
+            if(moviesArr){
+                moviesArr.forEach(m => {
+                if(m.id == movie.id){
+                    
+                    movieBtn.classList.add('movie-btn--liked');
+                
+                } else {
+                    movieBtn.classList.add('movie-btn');
+                }
+                movieBtn.addEventListener('click', () => {
+                    movieBtn.classList.toggle('movie-btn--liked');
+    
+                    likeMovie(movie) //function to add movies to localStorage and to the favorites section
+                })
+            })
+            }
+
+
             movieContainer.append(movieImage);
-
-
+            movieContainer.append(movieBtn);
 
             if(lazyLoad){
                 observer.observe(movieImage); //calling the method of observe for each image when lazyLoad is true
@@ -155,7 +225,7 @@ async function getTrendingMoviesPreview(){
     //selecting outside rendering function the container where movies will be displayed.
     //array of trending movies
 
-    renderMovies(results, trendingMovies, true)
+    renderMovies(results, trendingMovies, {lazyLoad: true, clean: true});
     // results.forEach(movie => renderMovies(movie, trendingMovies));
     //renderMovies solves the DRY issue
 
@@ -181,15 +251,17 @@ async function getCategoriesPreview(){
         categoriesPreviewList.append(...categoriesArray);
 }
 
-async function getMoviesByCategory(id, name){
+async function getMoviesByCategory(id, name, page = 1){
 
     const { data } = await api('discover/movie', {
         params: {
+            page,
             with_genres: id
         }
     });
     //destructuring response object into data only
-    
+    maxPage = data.total_pages;
+
     const results = data.results;
 
     // const data = await res.json();
@@ -200,24 +272,32 @@ async function getMoviesByCategory(id, name){
     //array of trending movies
 
     const nameWithout20 = name.replaceAll('%20', ' ');
+    
 
     headerCategoryTitle.innerText = nameWithout20;
 
     // genericSection.innerHTML = " ";
 
-    renderMovies(results, trendingMovies, true)
+    renderMovies(
+        results, 
+        trendingMovies, 
+        {lazyLoad: true,
+        clean: page == 1}
+        )
     // results.forEach( movie => renderMovies(movie, trendingMovies));
 
     genericSection.append(...trendingMovies)
     //appending movies array in the trending movies section, loading the DOM only once
 }
 
-async function getMoviesBySearch(searchValue){
+async function getMoviesBySearch(searchValue, page = 1){
     const { data } = await api(`search/movie`, {
         params: {
+            page,
             query: searchValue
         }
     });
+    maxPage = data.total_pages;
 
     const results = data.results;
 
@@ -225,7 +305,12 @@ async function getMoviesBySearch(searchValue){
 
     // genericSection.innerHTML = " "; //deleting loading skeleton
 
-    renderMovies(results, trendingMovies, true)
+    renderMovies(
+        results, 
+        trendingMovies, 
+        {lazyLoad: true,
+        clean: page == 1}
+        );
 
     genericSection.append(...trendingMovies)
 
@@ -238,34 +323,93 @@ async function getTrendingMovies(page = 1){
             page,
         }
     });
+    maxPage = data.total_pages; //variable that will allow us to calculate when we should use the infinite scrolling function
     const results = data.results;
     
     const trendingMovies = [];
     
     // genericSection.innerHTML = " ";    
 
-
-    renderMovies(
-        results, 
-        trendingMovies, 
-        {lazyLoad: true,
-        clean: page == 1}
-        ); //first time we load the content the inner html must be cleared 
-    // results.forEach(movie => renderMovies(movie, trendingMovies));
-    //renderMovies solves the DRY issue
-
-    genericSection.append(...trendingMovies)
-    //appending movies array in the trending movies section, loading the DOM only once
-
-    const btnLoadMore = document.createElement('button');
-    btnLoadMore.innerText = 'Load more';
-    btnLoadMore.addEventListener('click', () => {
-        btnLoadMore.classList.add('inactive');
-        getTrendingMovies(page + 1);
-    });
-    //this button will help us to load more content when we want to enable infinite scrolling 
     
-    genericSection.append(btnLoadMore);
+
+    // if(scrollIsBottom){
+        renderMovies(
+            results, 
+            trendingMovies, 
+            {lazyLoad: true,
+            clean: page == 1}
+            ); //first time we load the content the inner html must be cleared
+            // clean: page == 1 means that if the page is equal to 1, then the comparisson throws a true value, therefore we use that validation to deleting the inner HTMl of the page.
+        // results.forEach(movie => renderMovies(movie, trendingMovies));
+        //renderMovies solves the DRY issue
+    
+        genericSection.append(...trendingMovies)
+        //appending movies array in the trending movies section, loading the DOM only once
+    
+}
+
+
+
+async function getPaginatedTrendingMovies(){
+
+    const { 
+        scrollTop,
+        clientHeight,
+        scrollHeight } = document.documentElement;
+    
+    const scrollIsBottom = (scrollTop + clientHeight) >= scrollHeight - 15;
+
+    const pageIsNotMax = counter < maxPage; //this way we avoid the error of loading more pages than the total number of pages
+
+    // console.log(maxPage)
+
+        if(scrollIsBottom && pageIsNotMax){
+            counter++
+            getTrendingMovies(page = 1 + counter)
+        } //this way we make sure we're loading new content only when the scrollIsBottom results TRUE and at the same time we're at the bottom of the page
+    
+}
+
+async function getPaginatedMoviesByCategory(){
+    const { 
+        scrollTop,
+        clientHeight,
+        scrollHeight } = document.documentElement;
+    
+    const scrollIsBottom = (scrollTop + clientHeight) >= scrollHeight - 15;
+    const pageIsNotMax = counter < maxPage;
+
+    const [_, urlData] = location.hash.split('='); //with this variables we can call the function of getMoviesByCategory using those parameters without sending any parameter in the navigation function
+    
+    const [urlId, urlName] = urlData.split('-'); //Ex: 28-Action
+
+        // console.log(maxPage)
+
+        if(scrollIsBottom && pageIsNotMax){
+            counter++
+            getMoviesByCategory(urlId, urlName, page = 1 + counter)
+        } //this way we make sure we're loading new content only when the scrollIsBottom results TRUE and at the same time we're at the bottom of the page
+}
+
+function getPaginatedMoviesBySearch(query){
+    return async function(){
+        const { 
+            scrollTop,
+            clientHeight,
+            scrollHeight } = document.documentElement;
+        
+        const scrollIsBottom = (scrollTop + clientHeight) >= scrollHeight - 15;
+        const pageIsNotMax = counter < maxPage;
+
+        // const [_, urlData] = location.hash.split('='); //with this variables we can call the function of getMoviesByCategory using those parameters without sending any parameter in the navigation function
+
+            // console.log(maxPage)
+
+            if(scrollIsBottom && pageIsNotMax){
+                counter++
+                getMoviesBySearch(query, page = 1 + counter)
+            }
+    } //applying closures to return the expression of the function instead of the execution itself    
 }
 
 async function getMovieById(id){
@@ -317,4 +461,20 @@ const callback = (entries) => {
     entries.forEach(element => {
         element.src;
     })
+}
+
+function getLikedMovies(){
+    const likedMovies = likedMoviesList();
+
+    const likedMoviesArr = Object.values(likedMovies)
+
+    const moviesArray = [];
+
+    renderMovies(likedMoviesArr, moviesArray, {lazyLoad: true, clean: true});
+
+    likedMoviesSection.innerHTML = '';
+
+    likedMoviesSection.append(...moviesArray)
+
+    console.log(likedMoviesArr)
 }

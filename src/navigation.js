@@ -1,3 +1,7 @@
+let maxPage;
+let counter = 1;
+let infiniteScroll;
+
 searchFormBtn.addEventListener('click', () => {
     location.hash = '#search=' + searchFormInput.value;
 });
@@ -11,6 +15,8 @@ window.addEventListener('DOMContentLoaded', navigator, false);
 
 window.addEventListener('hashchange', navigator, false);
 //both events for navigating in the page, allowing to navigate with different hashes and when the whole page loads
+
+window.addEventListener('scroll', infiniteScroll, false)
 
 arrowBtn.addEventListener('click', () => {
         window.history.back();  // this method makes us go back to the previous page
@@ -26,6 +32,11 @@ arrowBtn.addEventListener('click', () => {
 function navigator(){
     console.log( { location } );
 
+    if(infiniteScroll){
+        window.removeEventListener('scroll', infiniteScroll, { passive: false });
+        infiniteScroll = undefined;
+    } //this function will help us to delete any value that infiniteScroll has, therefore releasing that space to assign another function dinamically every time we get to another page using this navigator function
+
     if(location.hash.startsWith('#trends')){
         trendsPage()
     } else if(location.hash.startsWith('#search=')){
@@ -40,6 +51,11 @@ function navigator(){
 
     window.scrollTo({top: 0, behavior: 'smooth'});
     //using scrollTo event, scrolling to the top of the page instantly
+
+    if(infiniteScroll){
+        window.addEventListener('scroll', infiniteScroll, { passive: false });
+    } //once the functions in each navigation page is executed, we assign there the value for infiniteScroll. Now that infiniteSroll has earned a new value this validation assigns to the window object the infiniteScroll function (the function according to such view in the website)
+
 }
 
 function homePage(){
@@ -74,6 +90,7 @@ function homePage(){
     // if(!moviesChildren && !catChildren) {
         getTrendingMoviesPreview();
         getCategoriesPreview();   
+        getLikedMovies();
     // }
     //if there's already any element in both containers, we won't call the API, that way optimizing the API consumption and not overloading the memory of the navigator
 
@@ -146,6 +163,9 @@ function categoriesPage(){
     // console.log(moviesCategoriesChildren)
 
     getMoviesByCategory(categoryId, categoryName);
+
+    infiniteScroll = getPaginatedMoviesByCategory;
+
 }
 
 function searchPage(){
@@ -157,8 +177,12 @@ function searchPage(){
     arrowBtn.classList.remove('inactive');
     arrowBtn.classList.remove('header-arrow--white');
 
-    // goBackButton.addEventListener('click', () => {
+    // arrowBtn.removeEventListener('click', () => {
     //     history.back();
+    // })
+    // arrowBtn.addEventListener('click', () => {
+    //     window.history.back();
+    //     location.hash = "#home";
     // })
 
     headerTitle.classList.add('inactive');
@@ -174,6 +198,8 @@ function searchPage(){
     const query = searchParam.replaceAll('%20', ' ');
 
     getMoviesBySearch(query);
+    
+    infiniteScroll = getPaginatedMoviesBySearch(query); //using closures to call this function
 }
 
 function trendsPage(){
@@ -197,4 +223,7 @@ function trendsPage(){
     headerCategoryTitle.innerText = 'Trending';
 
     getTrendingMovies();
+    
+    infiniteScroll = getPaginatedTrendingMovies;
+
 }
