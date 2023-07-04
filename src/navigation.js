@@ -11,9 +11,9 @@ trendingBtn.addEventListener('click', () => {
 });
 
 
-window.addEventListener('DOMContentLoaded', navigator, false);
+window.addEventListener('DOMContentLoaded', browser, false);
 
-window.addEventListener('hashchange', navigator, false);
+window.addEventListener('hashchange', browser, false);
 //both events for navigating in the page, allowing to navigate with different hashes and when the whole page loads
 
 window.addEventListener('scroll', infiniteScroll, false)
@@ -29,8 +29,8 @@ arrowBtn.addEventListener('click', () => {
 
 
 
-function navigator(){
-    console.log( { location } );
+function browser(){
+    // console.log( { location } );
 
     if(infiniteScroll){
         window.removeEventListener('scroll', infiniteScroll, { passive: false });
@@ -59,9 +59,10 @@ function navigator(){
 }
 
 function homePage(){
-    console.log('Home');
+    // console.log('Home');
     
     headerSection.classList.remove('header-container--long');
+    languageSelection.classList.remove('inactive');
     // making sure we don't have this class on the Home view
 
     headerSection.style.background = '';
@@ -89,6 +90,8 @@ function homePage(){
     // // console.log(children)
 
     // if(!moviesChildren && !catChildren) {
+        console.log(lang)
+        
         getTrendingMoviesPreview();
         getCategoriesPreview();   
         getLikedMovies();
@@ -102,6 +105,7 @@ function moviePage(){
     console.log('MOVIE!!');
 
     headerSection.classList.add('header-container--long');
+    languageSelection.classList.add('inactive');
 
     // headerSection.style.background = '';
     
@@ -127,6 +131,8 @@ function categoriesPage(){
     console.log('CATEGORIES');
 
     headerSection.classList.remove('header-container--long');
+    languageSelection.classList.add('inactive');
+
     headerSection.style.background = '';
     
     arrowBtn.classList.remove('inactive');
@@ -175,6 +181,8 @@ function searchPage(){
     console.log('SEARCH!');
 
     headerSection.classList.remove('.header-container--long');
+    languageSelection.classList.add('inactive');
+
     headerSection.style.background = '';
     
     arrowBtn.classList.remove('inactive');
@@ -210,6 +218,8 @@ function trendsPage(){
     console.log('TRENDS!!!');
 
     headerSection.classList.remove('header-container--long');
+    languageSelection.classList.add('inactive');
+
     headerSection.style.background = '';
     
     arrowBtn.classList.remove('inactive');

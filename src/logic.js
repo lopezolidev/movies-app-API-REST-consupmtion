@@ -2,7 +2,7 @@ const URL= "https://api.themoviedb.org/3/";
 const baseImgURL = "https://image.tmdb.org/t/p/w500/"
 //fixing size to 500 pixels
 
-const lang = window.navigator.language
+let lang = navigator.languages[1];
 
 const api = axios.create({
     baseURL: URL,
@@ -11,7 +11,7 @@ const api = axios.create({
     },
     params: {
         'api_key': API_KEY,
-        'language': lang || 'es-ES'
+        'language': lang,
     }
 });
 // creating axios instance
@@ -93,11 +93,41 @@ let observer = createObserver(callbackFun); //instancing the observer
 
 // Utils
 
-window.addEventListener('storage', () => {
+//language selection
+function changeLang(){
+    languageSelection.innerHTML = ''; //cleaning the node every time we call the function
+
+    const languages = []; //array to store languages
+
+    countries.forEach(country =>{ //every object from countries array will be resorted to create an HTML node 
+        const languageOption = document.createElement('option'); 
+
+        languageOption.setAttribute('value', country.language);
+
+        languageOption.setAttribute('for', 'language');
+
+        const languageText = document.createTextNode(country.flag);
+
+        languageOption.append(languageText);
+
+        languages.push(languageOption);
 
     })
 
+    languageSelection.append(...languages); //destructuring the array to drop every language in the HTML node
+}
 
+changeLang()
+      
+
+languageSelection.addEventListener('change', (e) => {
+    // console.log(e.target.value)
+    lang = e.target.value;
+    
+    homePage()
+})
+
+// TODO: SOLVE BUG FROM AXIOS NOT GETTING CHANGE IN LANGUAGE PARAMETER //
 
 function renderMovies(
     movies, 
@@ -218,7 +248,11 @@ function renderCategories(categories, array){
 
 
 async function getTrendingMoviesPreview(){
+    console.log(lang)
+    
     const { data } = await api('/trending/movie/day');
+    console.log(await api('/trending/movie/day'))
+
     //destructuring response object into data only
     const results = data.results;
 
@@ -476,29 +510,8 @@ function getLikedMovies(){
 
     renderMovies(likedMoviesArr, moviesArray, {lazyLoad: true, clean: true});
 
-    // moviesArray.forEach(movie => {
-    //     const movieButton = movie.children[1];
-
-    //     movieButton.addEventListener('click', () => {
-    //         const moviesInPreview = Array.from(trendingMoviePreviewList.children);
-           
-            
-    //     })
-    // })
-
     likedMoviesSection.innerHTML = '';
 
     likedMoviesSection.append(...moviesArray)
-
-    console.log(likedMoviesArr)
 }
 
-function turnOffLiked(){
-    const movies = Array.from(likedMoviesSection.childNodes) //converting the children of the movies in previe section into an Array
-    
-    const buttons = movies.map(movie => {
-        const movieElements = Array.from(movie.childNodes);
-        return movieElements[1];
-    }) //each button from each movie
-    
-}

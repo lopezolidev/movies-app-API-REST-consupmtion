@@ -27,3 +27,60 @@ const trendingBtn = document.querySelector('.trendingPreview-btn');
 const movieDetailTitle = document.querySelector('.movieDetail-title');
 const movieDetailDescription = document.querySelector('.movieDetail-description');
 const movieDetailScore = document.querySelector('.movieDetail-score');
+
+const languageSelection = document.querySelector('#lang-opt');
+
+// Countries
+
+countries = [
+    {
+        name: "usa",
+        language: "en",
+        flag: '🇺🇸'
+    },
+    {
+        name: "spain",
+        language: "es",
+        flag: '🇪🇸'
+    },
+    {
+        name: "france",
+        language: "fr",
+        flag: '🇫🇷'
+    },
+    {
+        name: "brazil",
+        language: "pt",
+        flag: '🇧🇷'
+    },
+    {
+        name: "germany",
+        language: "de",
+        flag: '🇩🇪'
+    },
+    {
+        name: "italy",
+        language: "it",
+        flag: '🇮🇹'
+    },
+    {
+        name: "russia",
+        language: "ru",
+        flag: '🇷🇺'
+    },
+    {
+        name: "china",
+        language: "zh",
+        flag: '🇨🇳'
+    },
+    {
+        name: "japan",
+        language: "ja",
+        flag: '🇯🇵'
+    },
+    {
+        name: "saudi arabia",
+        language: "ar",
+        flag: '🇸🇦'
+    }
+]
