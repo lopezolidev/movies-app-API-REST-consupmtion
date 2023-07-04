@@ -94,38 +94,38 @@ let observer = createObserver(callbackFun); //instancing the observer
 // Utils
 
 //language selection
-function changeLang(){
-    languageSelection.innerHTML = ''; //cleaning the node every time we call the function
+// function changeLang(){
+//     languageSelection.innerHTML = ''; //cleaning the node every time we call the function
 
-    const languages = []; //array to store languages
+//     const languages = []; //array to store languages
 
-    countries.forEach(country =>{ //every object from countries array will be resorted to create an HTML node 
-        const languageOption = document.createElement('option'); 
+//     countries.forEach(country =>{ //every object from countries array will be resorted to create an HTML node 
+//         const languageOption = document.createElement('option'); 
 
-        languageOption.setAttribute('value', country.language);
+//         languageOption.setAttribute('value', country.language);
 
-        languageOption.setAttribute('for', 'language');
+//         languageOption.setAttribute('for', 'language');
 
-        const languageText = document.createTextNode(country.flag);
+//         const languageText = document.createTextNode(country.flag);
 
-        languageOption.append(languageText);
+//         languageOption.append(languageText);
 
-        languages.push(languageOption);
+//         languages.push(languageOption);
 
-    })
+//     })
 
-    languageSelection.append(...languages); //destructuring the array to drop every language in the HTML node
-}
+//     languageSelection.append(...languages); //destructuring the array to drop every language in the HTML node
+// }
 
-changeLang()
+// changeLang()
       
 
-languageSelection.addEventListener('change', (e) => {
-    // console.log(e.target.value)
-    lang = e.target.value;
+// languageSelection.addEventListener('change', (e) => {
+//     // console.log(e.target.value)
+//     lang = e.target.value;
     
-    homePage()
-})
+//     homePage()
+// })
 
 // TODO: SOLVE BUG FROM AXIOS NOT GETTING CHANGE IN LANGUAGE PARAMETER //
 

@@ -139,4 +139,4 @@ dist
 # SvelteKit build / generate output
 .svelte-kit
 
-src/secret.js
+# src/secret.js  ← now its available to see the API_KEY
