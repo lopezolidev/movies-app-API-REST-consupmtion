@@ -2,6 +2,8 @@ const URL= "https://api.themoviedb.org/3/";
 const baseImgURL = "https://image.tmdb.org/t/p/w500/"
 //fixing size to 500 pixels
 
+const lang = window.navigator.language
+
 const api = axios.create({
     baseURL: URL,
     headers: {
@@ -9,7 +11,7 @@ const api = axios.create({
     },
     params: {
         'api_key': API_KEY,
-
+        'language': lang || 'es-ES'
     }
 });
 // creating axios instance
@@ -58,6 +60,11 @@ function likeMovie(movie){
 
     localStorage.setItem('liked_movies', JSON.stringify(likedMovies)); //storing the object as it is in localStorage
 
+    if (location.hash == ''){
+        getLikedMovies();
+        getTrendingMoviesPreview(); 
+      }
+
 } // inserting and extracting movie from localStorage 
 
 
@@ -85,6 +92,10 @@ let observer = createObserver(callbackFun); //instancing the observer
 
 
 // Utils
+
+window.addEventListener('storage', () => {
+
+    })
 
 
 
@@ -150,24 +161,18 @@ function renderMovies(
             }) //strategy to load default image if there's an error in imdb
 
             const movieBtn = document.createElement('button');
-
-            const moviesArr = Object.values(likedMoviesList());
-            if(moviesArr){
-                moviesArr.forEach(m => {
-                if(m.id == movie.id){
-                    
-                    movieBtn.classList.add('movie-btn--liked');
+            movieBtn.classList.add('movie-btn');
                 
-                } else {
-                    movieBtn.classList.add('movie-btn');
-                }
+            if(likedMoviesList()[movie.id]){
+                movieBtn.classList.add('movie-btn--liked');
+            } //if the object of movies has the attribute id, then the movie button will have the class of liked
+
+
                 movieBtn.addEventListener('click', () => {
                     movieBtn.classList.toggle('movie-btn--liked');
     
                     likeMovie(movie) //function to add movies to localStorage and to the favorites section
                 })
-            })
-            }
 
 
             movieContainer.append(movieImage);
@@ -178,7 +183,6 @@ function renderMovies(
             }
         // }
 
-        
         
         
 
@@ -472,9 +476,29 @@ function getLikedMovies(){
 
     renderMovies(likedMoviesArr, moviesArray, {lazyLoad: true, clean: true});
 
+    // moviesArray.forEach(movie => {
+    //     const movieButton = movie.children[1];
+
+    //     movieButton.addEventListener('click', () => {
+    //         const moviesInPreview = Array.from(trendingMoviePreviewList.children);
+           
+            
+    //     })
+    // })
+
     likedMoviesSection.innerHTML = '';
 
     likedMoviesSection.append(...moviesArray)
 
     console.log(likedMoviesArr)
+}
+
+function turnOffLiked(){
+    const movies = Array.from(likedMoviesSection.childNodes) //converting the children of the movies in previe section into an Array
+    
+    const buttons = movies.map(movie => {
+        const movieElements = Array.from(movie.childNodes);
+        return movieElements[1];
+    }) //each button from each movie
+    
 }

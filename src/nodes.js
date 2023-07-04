@@ -4,6 +4,7 @@ const trendingPreviewSection = document.getElementById('trendingPreview');
 const categoryPreviewSection = document.getElementById('categoriesPreview');
 const genericSection = document.getElementById('genericList');
 const movieDetailSection = document.getElementById('movieDetail');
+const likedMoviesArt = document.getElementById('liked');
 
 // List & Containers
 const searchForm = document.getElementById('searchForm');
