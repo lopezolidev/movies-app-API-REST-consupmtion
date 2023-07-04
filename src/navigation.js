@@ -62,7 +62,7 @@ function homePage(){
     // console.log('Home');
     
     headerSection.classList.remove('header-container--long');
-    languageSelection.classList.remove('inactive');
+    // languageSelection.classList.remove('inactive');
     // making sure we don't have this class on the Home view
 
     headerSection.style.background = '';
@@ -105,7 +105,7 @@ function moviePage(){
     console.log('MOVIE!!');
 
     headerSection.classList.add('header-container--long');
-    languageSelection.classList.add('inactive');
+    // languageSelection.classList.add('inactive');
 
     // headerSection.style.background = '';
     
@@ -131,7 +131,7 @@ function categoriesPage(){
     console.log('CATEGORIES');
 
     headerSection.classList.remove('header-container--long');
-    languageSelection.classList.add('inactive');
+    // languageSelection.classList.add('inactive');
 
     headerSection.style.background = '';
     
@@ -181,7 +181,7 @@ function searchPage(){
     console.log('SEARCH!');
 
     headerSection.classList.remove('.header-container--long');
-    languageSelection.classList.add('inactive');
+    // languageSelection.classList.add('inactive');
 
     headerSection.style.background = '';
     
@@ -218,7 +218,7 @@ function trendsPage(){
     console.log('TRENDS!!!');
 
     headerSection.classList.remove('header-container--long');
-    languageSelection.classList.add('inactive');
+    // languageSelection.classList.add('inactive');
 
     headerSection.style.background = '';
     
